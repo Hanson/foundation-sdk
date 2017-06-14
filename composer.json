@@ -1,5 +1,5 @@
 {
-    "name": "hanson/meituan-sdk",
+    "name": "hanson/foundation-sdk",
     "license": "MIT",
     "authors": [
         {
@@ -17,8 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Hanson\\Meituan\\": "src/",
-            "Hanson\\Foundation\\": "foundation/"
+            "Hanson\\Foundation\\": "src/"
         }
     }
 }
