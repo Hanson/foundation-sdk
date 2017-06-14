@@ -1,0 +1,24 @@
+{
+    "name": "hanson/meituan-sdk",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "HanSon",
+            "email": "h@hanc.cc"
+        }
+    ],
+    "require": {
+        "pimple/pimple": "^3.0",
+        "illuminate/support": "^5.4",
+        "doctrine/cache": "^1.6",
+        "symfony/http-foundation": "^3.3",
+        "guzzlehttp/guzzle": "^6.2",
+        "monolog/monolog": "^1.22"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hanson\\Meituan\\": "src/",
+            "Hanson\\Foundation\\": "foundation/"
+        }
+    }
+}
