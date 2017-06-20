@@ -88,7 +88,7 @@ class Foundation extends Container
     /**
      * Register providers.
      */
-    private function registerProviders()
+    protected function registerProviders()
     {
         foreach ($this->providers as $provider) {
             $this->register(new $provider());
