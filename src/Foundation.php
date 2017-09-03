@@ -69,16 +69,16 @@ class Foundation extends Container
 
         $logger = new Logger($this['config']->get('log.name', 'foundation'));
 
-        if (!array_get($this['config'], 'debug') || defined('PHPUNIT_RUNNING')) {
+        if (!$this['config']->get('debug') || defined('PHPUNIT_RUNNING')) {
             $logger->pushHandler(new NullHandler());
-        } elseif (array_get($this['config'], 'log.handler') instanceof HandlerInterface) {
+        } elseif ($this['config']->get('log.handler') instanceof HandlerInterface) {
             $logger->pushHandler($this['config']['log.handler']);
-        } elseif ($logFile = array_get($this['config'], 'log.file')) {
+        } elseif ($logFile = $this['config']->get('log.file')) {
             $logger->pushHandler(new StreamHandler(
                     $logFile,
-                    array_get($this['config'], 'log.level', Logger::WARNING),
+                    $this['config']->get('log.level', Logger::WARNING),
                     true,
-                    array_get($this['config'], 'log.permission', null))
+                    $this['config']->get('log.permission', null))
             );
         }
 
