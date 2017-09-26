@@ -54,5 +54,7 @@ abstract class AbstractAPI
      *
      * @return mixed
      */
-    abstract public function middlewares();
+    public function middlewares()
+    {
+    }
 }
