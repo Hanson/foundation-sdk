@@ -2,7 +2,7 @@
 
 namespace Hanson\Foundation;
 
-use Illuminate\Support\Collection;
+use Tightenco\Collect\Support\Collection;
 
 class Config extends Collection
 {
