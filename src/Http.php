@@ -218,9 +218,11 @@ class Http
             'Status' => $response->getStatusCode(),
             'Reason' => $response->getReasonPhrase(),
             'Headers' => $response->getHeaders(),
-            'Body' => strval($body = $response->getBody()) && $body->rewind(),
+            'Body' => strval($response->getBody()),
         ]);
 
+        $response->getBody()->rewind();
+        
         return $response;
     }
 
