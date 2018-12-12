@@ -122,15 +122,13 @@ class Http
             if (is_array($path)){
                 foreach ($path as $item) {
                     $multipart[] = [
-                        'name' => $name . '[]',
-                        'contents' => fopen($item, 'r'),
-                    ];
+                            'name' => $name . '[]',
+                        ] + $item;
                 }
             }else{
                 $multipart[] = [
-                    'name' => $name,
-                    'contents' => fopen($path, 'r'),
-                ];
+                        'name' => $name,
+                    ] + $path;
             }
         }
 
