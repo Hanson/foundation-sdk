@@ -27,11 +27,9 @@ class Foundation extends Container
     {
         parent::__construct();
 
-        $this['config'] = function () use ($config) {
-            return new Config($config);
-        };
+        $this['config'] = $config;
 
-        if ($this['config']->get('debug', false)) {
+        if ($this->config['debug'] ?? false) {
             error_reporting(E_ALL);
         }
 
@@ -49,7 +47,7 @@ class Foundation extends Container
             return Request::createFromGlobals();
         };
 
-        if (!empty($this['config']['cache']) && $this['config']['cache'] instanceof Cache) {
+        if ($cache = $this['config']['cache'] ?? null AND $cache instanceof Cache) {
             $this['cache'] = $this['config']['cache'];
         } else {
             $this['cache'] = function () {
@@ -67,19 +65,19 @@ class Foundation extends Container
             return;
         }
 
-        $logger = new Logger($this['config']->get('log.name', 'foundation'));
+        $logger = new Logger($this['config']['log']['name'] ?? 'foundation');
 
-        if (!$this['config']->get('debug') || defined('PHPUNIT_RUNNING')) {
+        if (!$this['config']['debug'] ?? false || defined('PHPUNIT_RUNNING')) {
             $logger->pushHandler(new NullHandler());
-        } elseif ($this['config']->get('log.handler') instanceof HandlerInterface) {
-            $logger->pushHandler($this['config']['log.handler']);
-        } elseif ($logFile = $this['config']->get('log.file')) {
+        } elseif ($this['config']['log']['handler'] instanceof HandlerInterface) {
+            $logger->pushHandler($this['config']['log']['handler']);
+        } elseif ($logFile = $this['config']['log']['file'] ?? null) {
             $logger->pushHandler(new StreamHandler(
                     $logFile,
-                    $this['config']->get('log.level', Logger::WARNING),
+                    $this['config']['log']['level'] ?? Logger::WARNING,
                     true,
-                    $this['config']->get('log.permission', null))
-            );
+                    $this['config']['log']['permission'] ?? null
+            ));
         }
 
         Log::setLogger($logger);
