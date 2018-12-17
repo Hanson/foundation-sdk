@@ -75,7 +75,7 @@ class Http
      */
     public function get($url, array $options = [])
     {
-        return $this->request($url, 'GET', ['query' => $options]);
+        return $this->request('GET', $url, ['query' => $options]);
     }
 
     /**
@@ -88,7 +88,7 @@ class Http
      */
     public function post($url, array $form = [])
     {
-        return $this->request($url, 'POST', ['form_params' => $form]);
+        return $this->request('POST', $url, ['form_params' => $form]);
     }
 
     /**
@@ -101,7 +101,7 @@ class Http
      */
      public function json($url, array $query = [])
      {
-         return $this->request($url, 'POST', ['json' => $query]);
+         return $this->request('POST', $url, ['json' => $query]);
      }
 
     /**
@@ -136,7 +136,7 @@ class Http
             $multipart[] = compact('name', 'contents');
         }
 
-        return $this->request($url, 'POST', ['query' => $queries, 'multipart' => $multipart]);
+        return $this->request('POST', $url, ['query' => $queries, 'multipart' => $multipart]);
     }
 
     /**
@@ -200,7 +200,7 @@ class Http
      *
      * @return ResponseInterface
      */
-    public function request($url, $method = 'GET', $options = [])
+    public function request($method, $url, $options = [])
     {
         $method = strtoupper($method);
 
