@@ -23,11 +23,13 @@ class Foundation extends Container
      */
     protected $providers = [];
 
+    protected $config;
+
     public function __construct($config)
     {
         parent::__construct();
 
-        $this['config'] = $config;
+        $this->setConfig($config);
 
         if ($this->config['debug'] ?? false) {
             error_reporting(E_ALL);
@@ -47,8 +49,8 @@ class Foundation extends Container
             return Request::createFromGlobals();
         };
 
-        if ($cache = $this['config']['cache'] ?? null AND $cache instanceof Cache) {
-            $this['cache'] = $this['config']['cache'];
+        if ($cache = $this->getConfig()['cache'] ?? null AND $cache instanceof Cache) {
+            $this['cache'] = $this->getConfig()['cache'];
         } else {
             $this['cache'] = function () {
                 return new FilesystemCache(sys_get_temp_dir());
@@ -65,18 +67,18 @@ class Foundation extends Container
             return;
         }
 
-        $logger = new Logger($this['config']['log']['name'] ?? 'foundation');
+        $logger = new Logger($this->getConfig()['log']['name'] ?? 'foundation');
 
-        if (!$this['config']['debug'] ?? false || defined('PHPUNIT_RUNNING')) {
+        if (!$this->getConfig()['debug'] ?? false || defined('PHPUNIT_RUNNING')) {
             $logger->pushHandler(new NullHandler());
-        } elseif (($this['config']['log']['handler'] ?? null) instanceof HandlerInterface) {
-            $logger->pushHandler($this['config']['log']['handler']);
-        } elseif ($logFile = $this['config']['log']['file'] ?? null) {
+        } elseif (($this->getConfig()['log']['handler'] ?? null) instanceof HandlerInterface) {
+            $logger->pushHandler($this->getConfig()['log']['handler']);
+        } elseif ($logFile = $this->getConfig()['log']['file'] ?? null) {
             $logger->pushHandler(new StreamHandler(
                     $logFile,
-                    $this['config']['log']['level'] ?? Logger::WARNING,
+                    $this->getConfig()['log']['level'] ?? Logger::WARNING,
                     true,
-                    $this['config']['log']['permission'] ?? null
+                    $this->getConfig()['log']['permission'] ?? null
             ));
         }
 
@@ -91,6 +93,16 @@ class Foundation extends Container
         foreach ($this->providers as $provider) {
             $this->register(new $provider());
         }
+    }
+
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
+    }
+
+    public function getConfig($key = null)
+    {
+        return $key ? $this->config[$key] : $this->config;
     }
 
     /**
