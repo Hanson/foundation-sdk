@@ -69,7 +69,7 @@ class Foundation extends Container
 
         if (!$this['config']['debug'] ?? false || defined('PHPUNIT_RUNNING')) {
             $logger->pushHandler(new NullHandler());
-        } elseif ($this['config']['log']['handler'] instanceof HandlerInterface) {
+        } elseif (($this['config']['log']['handler'] ?? null) instanceof HandlerInterface) {
             $logger->pushHandler($this['config']['log']['handler']);
         } elseif ($logFile = $this['config']['log']['file'] ?? null) {
             $logger->pushHandler(new StreamHandler(
