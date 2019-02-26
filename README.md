@@ -1,6 +1,13 @@
 # foundation-sdk
 To create a sdk easiler!
 
+[![Latest Stable Version](https://poser.pugx.org/hanson/foundation-sdk/v/stable)](https://packagist.org/packages/hanson/foundation-sdk)
+[![Total Downloads](https://poser.pugx.org/hanson/foundation-sdk/downloads)](https://packagist.org/packages/hanson/foundation-sdk)
+[![Latest Unstable Version](https://poser.pugx.org/hanson/foundation-sdk/v/unstable)](https://packagist.org/packages/hanson/foundation-sdk)
+[![License](https://poser.pugx.org/hanson/foundation-sdk/license)](https://packagist.org/packages/hanson/foundation-sdk)
+[![Monthly Downloads](https://poser.pugx.org/hanson/foundation-sdk/d/monthly)](https://packagist.org/packages/hanson/foundation-sdk)
+[![Daily Downloads](https://poser.pugx.org/hanson/foundation-sdk/d/daily)](https://packagist.org/packages/hanson/foundation-sdk)
+
 ## What's inside Foundation-sdk
 
 - [pimple](https://github.com/silexphp/Pimple) (Container)
