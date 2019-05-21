@@ -10,7 +10,7 @@
     "require": {
         "php": "^7.0",
         "pimple/pimple": "^3.0",
-        "doctrine/cache": "^1.6",
+        "doctrine/cache": ">=1.6",
         "symfony/http-foundation": "^3.3|^4.0",
         "guzzlehttp/guzzle": "^6.2",
         "monolog/monolog": "^1.22"
