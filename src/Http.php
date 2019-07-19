@@ -95,11 +95,11 @@ class Http
      * JSON request.
      *
      * @param string $url
-     * @param array $query
+     * @param $query
      *
      * @return ResponseInterface
      */
-     public function json($url, array $query = [])
+     public function json($url, $query = [])
      {
          return $this->request('POST', $url, ['json' => $query]);
      }
