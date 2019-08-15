@@ -141,13 +141,17 @@ class Http
 
     /**
      * Set GuzzleHttp\Client.
-     *
-     * @param \GuzzleHttp\Client $client
-     *
-     * @return Http
+     * @param HttpClient $client
+     * @return $this
+     * @throws HttpException
+     * @author tu6ge
+     * @date 2019/8/15 下午11:00
      */
     public function setClient(HttpClient $client)
     {
+        if (!($this->client instanceof HttpClient)) {
+            throw new HttpException('http client is illegal');
+        }
         $this->client = $client;
 
         return $this;
@@ -160,7 +164,7 @@ class Http
      */
     public function getClient()
     {
-        if (!($this->client instanceof HttpClient)) {
+        if (empty($this->client)) {
             $this->client = new HttpClient();
         }
 
