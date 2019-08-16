@@ -3,6 +3,7 @@
 namespace Hanson\Foundation;
 
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\HandlerStack;
 use Hanson\Foundation\Exception\HttpException;
 use Psr\Http\Message\ResponseInterface;
@@ -147,11 +148,8 @@ class Http
      * @author tu6ge
      * @date 2019/8/15 下午11:00
      */
-    public function setClient(HttpClient $client)
+    public function setClient(ClientInterface $client)
     {
-        if (!($this->client instanceof HttpClient)) {
-            throw new HttpException('http client is illegal');
-        }
         $this->client = $client;
 
         return $this;
