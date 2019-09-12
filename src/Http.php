@@ -123,13 +123,12 @@ class Http
                 foreach ($path as $item) {
                     $multipart[] = [
                             'name' => $name . '[]',
-                        ] + $item;
+                        ] + $this->fileToMultipart($item);
                 }
             } else {
                 $multipart[] = [
-                    'name' => $name,
-                    'contents' => fopen($path, 'r')
-                ];
+                        'name' => $name,
+                    ] + $this->fileToMultipart($path);
             }
         }
 
@@ -138,6 +137,19 @@ class Http
         }
 
         return $this->request('POST', $url, ['query' => $queries, 'multipart' => $multipart]);
+    }
+
+    private function fileToMultipart($file)
+    {
+        if (is_array($file)) {
+            return $file;
+        } elseif (@file_exists($file)) {
+            return ['contents' => fopen($file, 'r')];
+        } elseif (filter_var($file, FILTER_VALIDATE_URL)) {
+            return ['contents' => file_get_contents($file)];
+        } else {
+            return ['contents' => $file];
+        }
     }
 
     /**
