@@ -82,7 +82,7 @@ class Http
      * POST request.
      *
      * @param string $url
-     * @param array $form
+     * @param array  $form
      *
      * @return ResponseInterface
      */
@@ -95,22 +95,22 @@ class Http
      * JSON request.
      *
      * @param string $url
-     * @param $query
+     * @param        $query
      *
      * @return ResponseInterface
      */
-     public function json($url, $query = [])
-     {
-         return $this->request('POST', $url, ['json' => $query]);
-     }
+    public function json($url, $query = [])
+    {
+        return $this->request('POST', $url, ['json' => $query]);
+    }
 
     /**
      * Upload file.
      *
      * @param string $url
-     * @param array $files
-     * @param array $form
-     * @param array $queries
+     * @param array  $files
+     * @param array  $form
+     * @param array  $queries
      *
      * @return ResponseInterface
      */
@@ -119,16 +119,16 @@ class Http
         $multipart = [];
 
         foreach ($files as $name => $path) {
-            if (is_array($path)){
+            if (is_array($path)) {
                 foreach ($path as $item) {
                     $multipart[] = [
                             'name' => $name . '[]',
-                        ] + $item;
+                        ] + $this->fileToMultipart($item);
                 }
-            }else{
+            } else {
                 $multipart[] = [
                         'name' => $name,
-                    ] + $path;
+                    ] + $this->fileToMultipart($path);
             }
         }
 
@@ -137,6 +137,19 @@ class Http
         }
 
         return $this->request('POST', $url, ['query' => $queries, 'multipart' => $multipart]);
+    }
+
+    private function fileToMultipart($file)
+    {
+        if (is_array($file)) {
+            return $file;
+        } elseif (@file_exists($file)) {
+            return ['contents' => fopen($file, 'r')];
+        } elseif (filter_var($file, FILTER_VALIDATE_URL)) {
+            return ['contents' => file_get_contents($file)];
+        } else {
+            return ['contents' => $file];
+        }
     }
 
     /**
@@ -196,7 +209,7 @@ class Http
      *
      * @param string $url
      * @param string $method
-     * @param array $options
+     * @param array  $options
      *
      * @return ResponseInterface
      */
@@ -213,10 +226,10 @@ class Http
         $response = $this->getClient()->request($method, $url, $options);
 
         Log::debug('API response:', [
-            'Status' => $response->getStatusCode(),
-            'Reason' => $response->getReasonPhrase(),
+            'Status'  => $response->getStatusCode(),
+            'Reason'  => $response->getReasonPhrase(),
             'Headers' => $response->getHeaders(),
-            'Body' => strval($response->getBody()),
+            'Body'    => strval($response->getBody()),
         ]);
 
         return $response;
