@@ -102,7 +102,7 @@ class Foundation extends Container
 
     public function getConfig($key = null)
     {
-        return $key ? $this->config[$key] : $this->config;
+        return $key ? ($this->config[$key] ?? null) : $this->config;
     }
 
     /**
