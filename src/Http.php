@@ -133,10 +133,29 @@ class Http
         }
 
         foreach ($form as $name => $contents) {
-            $multipart[] = compact('name', 'contents');
+            $multipart = array_merge($multipart, $this->normalizeMultipartField($name, $contents));
         }
 
         return $this->request('POST', $url, ['query' => $queries, 'multipart' => $multipart]);
+    }
+    
+        /**
+     * @param string $name
+     * @param mixed  $contents
+     *
+     * @return array
+     */
+    public function normalizeMultipartField(string $name, $contents) {
+        $field = [];
+        if (!is_array($contents)) {
+            return [compact('name', 'contents')];
+        } else {
+            foreach ($contents as $key => $value) {
+                $key = sprintf('%s[%s]', $name, $key);
+                $field = array_merge($field, is_array($value) ? $this->normalizeMultipartField($key, $value) : [['name' => $key, 'contents' => $value]]);
+            }
+        }
+        return $field;
     }
 
     private function fileToMultipart($file)
