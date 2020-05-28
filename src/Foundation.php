@@ -136,4 +136,12 @@ class Foundation extends Container
     {
         $this->offsetSet($id, $value);
     }
+
+    public function rebind(string $id, $value)
+    {
+        $this->offsetUnset($id);
+        $this->offsetSet($id, $value);
+
+        return $this;
+    }
 }
