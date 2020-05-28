@@ -13,6 +13,11 @@ use Monolog\Logger;
 use Pimple\Container;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class Foundation
+ * @property-read Http $http
+ * @package Hanson\Foundation
+ */
 class Foundation extends Container
 {
 
@@ -49,7 +54,11 @@ class Foundation extends Container
             return Request::createFromGlobals();
         };
 
-        if ($cache = $this->getConfig()['cache'] ?? null AND $cache instanceof Cache) {
+        $this['http'] = function () {
+            return new Http($this);
+        };
+
+        if ($cache = $this->getConfig()['cache'] ?? null and $cache instanceof Cache) {
             $this['cache'] = $this->getConfig()['cache'];
         } else {
             $this['cache'] = function () {
@@ -75,10 +84,10 @@ class Foundation extends Container
             $logger->pushHandler($this->getConfig()['log']['handler']);
         } elseif ($logFile = $this->getConfig()['log']['file'] ?? null) {
             $logger->pushHandler(new StreamHandler(
-                    $logFile,
-                    $this->getConfig()['log']['level'] ?? Logger::WARNING,
-                    true,
-                    $this->getConfig()['log']['permission'] ?? null
+                $logFile,
+                $this->getConfig()['log']['level'] ?? Logger::WARNING,
+                true,
+                $this->getConfig()['log']['permission'] ?? null
             ));
         }
 
@@ -108,7 +117,7 @@ class Foundation extends Container
     /**
      * Magic get access.
      *
-     * @param string $id
+     * @param  string  $id
      *
      * @return mixed
      */
@@ -120,8 +129,8 @@ class Foundation extends Container
     /**
      * Magic set access.
      *
-     * @param string $id
-     * @param mixed  $value
+     * @param  string  $id
+     * @param  mixed  $value
      */
     public function __set($id, $value)
     {
