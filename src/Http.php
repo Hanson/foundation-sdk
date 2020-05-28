@@ -33,6 +33,11 @@ class Http
     protected $middlewares = [];
 
     /**
+     * @var Foundation
+     */
+    protected $app;
+
+    /**
      * Guzzle client default settings.
      *
      * @var array
@@ -44,9 +49,18 @@ class Http
     ];
 
     /**
+     * Http constructor.
+     * @param  Foundation  $app
+     */
+    public function __construct(Foundation $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
      * Set guzzle default settings.
      *
-     * @param array $defaults
+     * @param  array  $defaults
      */
     public static function setDefaultOptions($defaults = [])
     {
@@ -66,8 +80,8 @@ class Http
     /**
      * GET request.
      *
-     * @param string $url
-     * @param array  $options
+     * @param  string  $url
+     * @param  array  $options
      *
      * @return ResponseInterface
      *
@@ -81,8 +95,8 @@ class Http
     /**
      * POST request.
      *
-     * @param string $url
-     * @param array  $form
+     * @param  string  $url
+     * @param  array  $form
      *
      * @return ResponseInterface
      */
@@ -94,7 +108,7 @@ class Http
     /**
      * JSON request.
      *
-     * @param string $url
+     * @param  string  $url
      * @param        $query
      *
      * @return ResponseInterface
@@ -107,10 +121,10 @@ class Http
     /**
      * Upload file.
      *
-     * @param string $url
-     * @param array  $files
-     * @param array  $form
-     * @param array  $queries
+     * @param  string  $url
+     * @param  array  $files
+     * @param  array  $form
+     * @param  array  $queries
      *
      * @return ResponseInterface
      */
@@ -122,7 +136,7 @@ class Http
             if (is_array($path)) {
                 foreach ($path as $item) {
                     $multipart[] = [
-                            'name' => $name . '[]',
+                            'name' => $name.'[]',
                         ] + $this->fileToMultipart($item);
                 }
             } else {
@@ -138,21 +152,26 @@ class Http
 
         return $this->request('POST', $url, ['query' => $queries, 'multipart' => $multipart]);
     }
-    
-        /**
-     * @param string $name
-     * @param mixed  $contents
+
+    /**
+     * @param  string  $name
+     * @param  mixed  $contents
      *
      * @return array
      */
-    public function normalizeMultipartField(string $name, $contents) {
+    public function normalizeMultipartField(string $name, $contents)
+    {
         $field = [];
         if (!is_array($contents)) {
             return [compact('name', 'contents')];
         } else {
             foreach ($contents as $key => $value) {
                 $key = sprintf('%s[%s]', $name, $key);
-                $field = array_merge($field, is_array($value) ? $this->normalizeMultipartField($key, $value) : [['name' => $key, 'contents' => $value]]);
+                $field = array_merge($field, is_array($value) ? $this->normalizeMultipartField($key, $value) : [
+                    [
+                        'name' => $key, 'contents' => $value
+                    ]
+                ]);
             }
         }
         return $field;
@@ -174,7 +193,7 @@ class Http
     /**
      * Set GuzzleHttp\Client.
      *
-     * @param \GuzzleHttp\Client $client
+     * @param  \GuzzleHttp\Client  $client
      *
      * @return Http
      */
@@ -202,7 +221,7 @@ class Http
     /**
      * Add a middleware.
      *
-     * @param callable $middleware
+     * @param  callable  $middleware
      *
      * @return $this
      */
@@ -226,9 +245,9 @@ class Http
     /**
      * Make a request.
      *
-     * @param string $url
-     * @param string $method
-     * @param array  $options
+     * @param  string  $url
+     * @param  string  $method
+     * @param  array  $options
      *
      * @return ResponseInterface
      */
@@ -245,10 +264,10 @@ class Http
         $response = $this->getClient()->request($method, $url, $options);
 
         Log::debug('API response:', [
-            'Status'  => $response->getStatusCode(),
-            'Reason'  => $response->getReasonPhrase(),
+            'Status' => $response->getStatusCode(),
+            'Reason' => $response->getReasonPhrase(),
             'Headers' => $response->getHeaders(),
-            'Body'    => strval($response->getBody()),
+            'Body' => strval($response->getBody()),
         ]);
 
         return $response;
@@ -269,6 +288,11 @@ class Http
 
         if (isset(static::$defaults['handler']) && is_callable(static::$defaults['handler'])) {
             $stack->push(static::$defaults['handler'], self::USER_DEFINED_HANDLER);
+        }
+
+        if (isset($this->app['guzzle_handler'])) {
+            $guzzleHandler = $this->app['guzzle_handler'];
+            $stack->setHandler(is_string($guzzleHandler) ? new $guzzleHandler() : $this->app['guzzle_handler']);
         }
 
         return $stack;
