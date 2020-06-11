@@ -62,6 +62,11 @@ abstract class AbstractAccessToken
     protected $http;
 
     /**
+     * @var Foundation
+     */
+    protected $app;
+
+    /**
      * Token string.
      *
      * @var string
@@ -69,8 +74,17 @@ abstract class AbstractAccessToken
     protected $token;
 
     /**
-     * @param mixed $token
-     * @param int $expires
+     * AbstractAccessToken constructor.
+     * @param  Foundation  $app
+     */
+    public function __construct(Foundation $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
+     * @param  mixed  $token
+     * @param  int  $expires
      * @return $this
      */
     public function setToken($token, $expires = 86400)
@@ -87,7 +101,7 @@ abstract class AbstractAccessToken
     /**
      * Get token from cache.
      *
-     * @param bool $forceRefresh
+     * @param  bool  $forceRefresh
      *
      * @return string
      */
@@ -128,7 +142,7 @@ abstract class AbstractAccessToken
     abstract public function checkTokenResponse($result);
 
     /**
-     * @param mixed $appId
+     * @param  mixed  $appId
      */
     public function setAppId($appId)
     {
@@ -144,7 +158,7 @@ abstract class AbstractAccessToken
     }
 
     /**
-     * @param string $secret
+     * @param  string  $secret
      */
     public function setSecret($secret)
     {
@@ -162,7 +176,7 @@ abstract class AbstractAccessToken
     /**
      * Set cache instance.
      *
-     * @param \Doctrine\Common\Cache\Cache $cache
+     * @param  \Doctrine\Common\Cache\Cache  $cache
      *
      * @return AbstractAccessToken
      */
@@ -204,13 +218,13 @@ abstract class AbstractAccessToken
      */
     public function getHttp()
     {
-        return $this->http ?: $this->http = new Http();
+        return $this->http ?? $this->app->http;
     }
 
     /**
      * Set the http instance.
      *
-     * @param Http $http
+     * @param  Http  $http
      *
      * @return $this
      */
