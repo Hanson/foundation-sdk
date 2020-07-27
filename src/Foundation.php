@@ -40,8 +40,8 @@ class Foundation extends Container
             error_reporting(E_ALL);
         }
 
-        $this->registerProviders();
         $this->registerBase();
+        $this->registerProviders();
         $this->initializeLogger();
     }
 
