@@ -6,15 +6,6 @@ use Psr\Http\Message\RequestInterface;
 
 abstract class AbstractAPI
 {
-    /**
-     * @var Foundation
-     */
-    protected $app;
-
-    public function __construct(Foundation $app)
-    {
-        $this->app = $app;
-    }
 
     /**
      * Http instance.
@@ -29,7 +20,7 @@ abstract class AbstractAPI
     public function getHttp()
     {
         if (is_null($this->http)) {
-            $this->http = new Http($this->app);
+            $this->http = new Http();
         }
 
         if (count($this->http->getMiddlewares()) === 0) {

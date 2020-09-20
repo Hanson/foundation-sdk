@@ -32,10 +32,7 @@ class Http
      */
     protected $middlewares = [];
 
-    /**
-     * @var Foundation
-     */
-    protected $app;
+    protected $stack;
 
     /**
      * Guzzle client default settings.
@@ -47,15 +44,6 @@ class Http
             CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
         ],
     ];
-
-    /**
-     * Http constructor.
-     * @param  Foundation  $app
-     */
-    public function __construct(Foundation $app)
-    {
-        $this->app = $app;
-    }
 
     /**
      * Set guzzle default settings.
@@ -278,8 +266,12 @@ class Http
      *
      * @return HandlerStack
      */
-    protected function getHandler()
+    public function getHandler()
     {
+        if ($this->stack) {
+            return $this->stack;
+        }
+
         $stack = HandlerStack::create();
 
         foreach ($this->middlewares as $middleware) {
@@ -290,11 +282,19 @@ class Http
             $stack->push(static::$defaults['handler'], self::USER_DEFINED_HANDLER);
         }
 
-        if (isset($this->app['guzzle_handler'])) {
-            $guzzleHandler = $this->app['guzzle_handler'];
-            $stack->setHandler(is_string($guzzleHandler) ? new $guzzleHandler() : $this->app['guzzle_handler']);
-        }
+        $this->stack = $stack;
 
         return $stack;
+    }
+
+    public function addHandler($guzzleHandler)
+    {
+        $stack = $this->getHandler();
+
+        $stack->setHandler(is_string($guzzleHandler) ? new $guzzleHandler() : $guzzleHandler);
+
+        $this->stack = $stack;
+
+        return $this;
     }
 }

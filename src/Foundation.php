@@ -55,7 +55,7 @@ class Foundation extends Container
         };
 
         $this['http'] = function () {
-            return new Http($this);
+            return new Http();
         };
 
         if ($cache = $this->getConfig()['cache'] ?? null and $cache instanceof Cache) {
