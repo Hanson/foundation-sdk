@@ -14,6 +14,10 @@ To create a sdk easiler!
 - Http
 - Log
 
+## 安装要求
+
+php 7 以上（需要PHP5的可移步到其他人维护的仓库 https://github.com/CodeNauhc/foundation-sdk/tree/php5）
+
 ## 中文实例教程
 
 [SDK 开发高级版！揭开 Foundation-SDK 的神秘面纱](https://learnku.com/articles/15038/sdk-development-advanced-edition-uncover-the-mysterious-veil-of-foundation-sdk)
